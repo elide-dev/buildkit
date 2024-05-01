@@ -33,6 +33,7 @@ kotlin {
 }
 
 dependencies {
+  testImplementation(libs.junit.params)
   testImplementation(gradleTestKit())
   testImplementation(kotlin("test"))
 }

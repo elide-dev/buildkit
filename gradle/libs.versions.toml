@@ -1,5 +1,6 @@
 [versions]
 kotlin = "1.9.20"
+junit = "5.10.2"
 
 # plugin versions
 plugins-buildTimeTracker = "4.3.0"
@@ -7,6 +8,7 @@ plugins-kotlinx-abiValidator = "0.13.2"
 plugins-buildconfig = "3.1.0"
 
 [libraries]
+junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
 
 [plugins]
 kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
