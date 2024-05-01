@@ -1,0 +1,16 @@
+[versions]
+kotlin = "1.9.20"
+
+# plugin versions
+plugins-buildTimeTracker = "4.3.0"
+plugins-kotlinx-abiValidator = "0.13.2"
+plugins-buildconfig = "3.1.0"
+
+[libraries]
+
+[plugins]
+kotlin-jvm = { id = "org.jetbrains.kotlin.jvm", version.ref = "kotlin" }
+kotlinx-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-validator", version.ref = "plugins-kotlinx-abiValidator" }
+
+buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "plugins-buildTimeTracker" }
+buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "plugins-buildconfig" }
