@@ -3,6 +3,8 @@ plugins {
   `kotlin-dsl`
 
   alias(libs.plugins.buildconfig)
+  alias(libs.plugins.buildTimeTracker)
+  alias(libs.plugins.kotlinx.abiValidator)
 }
 
 // use overridable options for publishing information (see gradle.properties)

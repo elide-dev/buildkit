@@ -1,0 +1,19 @@
+public abstract class io/github/darvld/buildkit/BuildkitBasePlugin : org/gradle/api/Plugin {
+	public fun <init> ()V
+}
+
+public class io/github/darvld/buildkit/BuildkitPlugin : io/github/darvld/buildkit/BuildkitBasePlugin {
+	public fun <init> ()V
+	public synthetic fun apply (Ljava/lang/Object;)V
+	public fun apply (Lorg/gradle/api/Project;)V
+}
+
+public abstract class io/github/darvld/buildkit/OptionsExtension {
+	public final fun enabled (Ljava/lang/String;Z)Z
+	public static synthetic fun enabled$default (Lio/github/darvld/buildkit/OptionsExtension;Ljava/lang/String;ZILjava/lang/Object;)Z
+	public final fun invoke (Ljava/lang/String;)Ljava/lang/String;
+	public final fun invoke (Ljava/lang/String;Ljava/lang/String;)Ljava/lang/String;
+	public final fun orNull (Ljava/lang/String;)Ljava/lang/String;
+	protected final fun resolve (Ljava/lang/String;)Ljava/lang/String;
+}
+
