@@ -1,5 +1,9 @@
 package io.github.darvld.buildkit
 
+import io.github.darvld.buildkit.options.EnvOptionsSource
+import io.github.darvld.buildkit.options.LayeredOptionsSource
+import io.github.darvld.buildkit.options.ProjectOptionsSource
+import io.github.darvld.buildkit.options.PropertiesOptionSource
 import org.gradle.api.Project
 import org.gradle.kotlin.dsl.create
 
@@ -13,10 +17,12 @@ public open class BuildkitPlugin : BuildkitBasePlugin<Project>() {
   private fun registerOptionsExtension(project: Project): OptionsExtension {
     // use the root name as prefix for options
     val namespace = project.rootProject.name
-
-    val options = collectOptions(
-      userHomePath = project.gradle.gradleUserHomeDir.toPath(),
-      projectPath = project.layout.projectDirectory.asFile.toPath(),
+    val options = LayeredOptionsSource(
+      EnvOptionsSource,
+      // local.properties
+      PropertiesOptionSource(project.layout.projectDirectory.file(LOCAL_PROPERTIES_FILE).asFile.toPath()),
+      // gradle-provided props (CLI, gradle.properties, user properties)
+      ProjectOptionsSource(project),
     )
 
     // create the extension, inject the namespace and options source for the constructor

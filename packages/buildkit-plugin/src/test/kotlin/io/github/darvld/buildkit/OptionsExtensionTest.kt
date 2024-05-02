@@ -10,18 +10,19 @@ class OptionsExtensionTest {
   /** Temporary project root. */
   @TempDir lateinit var projectDir: File
 
-  @Test fun `should include gradle properties`() {
+  @Test fun `use options in project plugin`() {
     // prepare project files
     projectDir.resolve("build.gradle.kts").writeText(
       """
       plugins {
-          id("io.github.darvld.buildkit") version "0.1.0"
+          id("${TestConstants.PLUGIN_ID}") version "${TestConstants.PLUGIN_VERSION}"
       }
       
-      check(options.orNull("local") == "localOption") { "expected project-local option to be present" }
+      // run assertions inside the build script
+      check(options.orNull("env") == "envOption") { "expected env option to be present" }
       check(options.orNull("gradle") == "gradleOption") { "expected gradle option to be present" }
       check(options.orNull("overridden") == "replaced") { "expected local.properties to override option" }
-      check(options.orNull("env") == "envOption") { "expected env option to be present" }
+      check(options.orNull("local") == "localOption") { "expected project-local option to be present" }
       """.trimIndent()
     )
 

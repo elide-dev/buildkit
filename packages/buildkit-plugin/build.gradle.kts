@@ -14,19 +14,10 @@ version = property("buildkit.version").toString()
 val projectPluginId = "$group.${property("buildkit.project-plugin-id")}"
 val projectPluginName = property("buildkit.project-plugin-name").toString()
 
-// resolve the name and full ID for the settings plugin
-val settingsPluginId = "$group.${property("buildkit.settings-plugin-id")}"
-val settingsPluginName = property("buildkit.settings-plugin-name").toString()
-
 gradlePlugin {
   plugins.create(projectPluginName) {
     id = projectPluginId
     implementationClass = "io.github.darvld.buildkit.BuildkitPlugin"
-  }
-
-  plugins.create(settingsPluginName) {
-    id = settingsPluginId
-    implementationClass = "io.github.darvld.buildkit.BuildkitSettingsPlugin"
   }
 }
 
@@ -52,6 +43,9 @@ buildConfig {
 
     buildConfigField("String", "TEST_ENV_KEY", "\"$testEnvKey\"")
     buildConfigField("String", "TEST_ENV_VALUE", "\"$testEnvValue\"")
+
+    buildConfigField("String", "PLUGIN_ID", "\"$projectPluginId\"")
+    buildConfigField("String", "PLUGIN_VERSION", "\"$version\"")
   }
 }
 
