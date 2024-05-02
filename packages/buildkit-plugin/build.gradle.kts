@@ -1,6 +1,8 @@
 plugins {
   id("java-gradle-plugin")
   `kotlin-dsl`
+
+  alias(libs.plugins.buildconfig)
 }
 
 // use overridable options for publishing information (see gradle.properties)
@@ -27,7 +29,7 @@ gradlePlugin {
     implementationClass = "io.github.darvld.buildkit.BuildkitSettingsPlugin"
   }
 }
-  
+
 kotlin {
   explicitApi()
 }
@@ -38,6 +40,24 @@ dependencies {
   testImplementation(kotlin("test"))
 }
 
+// values used during env-based option tests
+val testEnvKey = "TEST_ENV"
+val testEnvValue = "TEST_ENV_VALUE"
+
+buildConfig {
+  packageName = "io.github.darvld.buildkit"
+
+  sourceSets.named("test") {
+    className = "TestConstants"
+
+    buildConfigField("String", "TEST_ENV_KEY", "\"$testEnvKey\"")
+    buildConfigField("String", "TEST_ENV_VALUE", "\"$testEnvValue\"")
+  }
+}
+
 tasks.test {
   useJUnitPlatform()
+
+  // set the env expected by some test cases
+  environment(testEnvKey, testEnvValue)
 }

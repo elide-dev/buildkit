@@ -7,7 +7,7 @@ import io.github.darvld.buildkit.options.OptionsSource
  * Options available to the build from multiple sources. The following sources are checked in descending order of
  * priority:
  *
- * - Environment variables (see below for naming rules).
+ * - Environment variables.
  * - Project-level `local.properties`
  * - User-wide `gradle.properties`
  * - Project-level `gradle.properties`
