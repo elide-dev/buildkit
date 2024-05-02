@@ -14,6 +14,6 @@ package io.github.darvld.buildkit.options
   internal constructor(vararg layers: OptionsSource) : this(layers.toList())
 
   override fun resolve(option: Option): String? {
-    return layers.firstNotNullOfOrNull { it.resolve(option) }
+    return layers.firstNotNullOfOrNull { it.resolve(option).also { println("Resolving $option, found=$it") } }
   }
 }

@@ -12,10 +12,13 @@ import io.github.darvld.buildkit.options.OptionsSource
  * - User-wide `gradle.properties`
  * - Project-level `gradle.properties`
  */
-public abstract class OptionsExtension internal constructor(private val source: OptionsSource) {
+public abstract class OptionsExtension internal constructor(
+  private val namespace: String,
+  private val source: OptionsSource
+) {
   /** Resolve the value of an option with the given [name] from the [source]. */
   protected fun resolve(name: String): String? {
-    return source.resolve(Option.of(name))
+    return source.resolve(Option.of("$namespace.$name"))?.trim()
   }
 
   /**

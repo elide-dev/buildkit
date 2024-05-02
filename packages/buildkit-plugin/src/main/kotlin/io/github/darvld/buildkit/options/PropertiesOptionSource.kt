@@ -3,6 +3,7 @@ package io.github.darvld.buildkit.options
 import io.github.darvld.buildkit.options.PropertiesOptionSource.LoadingMode
 import java.nio.file.Path
 import java.util.*
+import kotlin.io.path.exists
 import kotlin.io.path.inputStream
 
 /**
@@ -34,7 +35,9 @@ internal class PropertiesOptionSource(file: Path, mode: LoadingMode = LoadingMod
   /** Read and parse the given [source] as a [Properties] map. */
   private fun readProperties(source: Path): Properties {
     val props = Properties()
-    source.inputStream().use(props::load)
+
+    // safely ignore nonexistent files, return an empty map instead
+    if (source.exists()) source.inputStream().use(props::load)
 
     return props
   }
