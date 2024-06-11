@@ -1,24 +1,21 @@
 package io.github.darvld.buildkit
 
-import io.github.darvld.buildkit.options.Option
-import io.github.darvld.buildkit.options.OptionsSource
+import org.gradle.api.Project
 
 /**
- * Options available to the build from multiple sources. The following sources are checked in descending order of
- * priority:
- *
- * - Environment variables.
- * - Project-level `local.properties`
- * - User-wide `gradle.properties`
- * - Project-level `gradle.properties`
+ * Namespaced options drawn from Project properties, using the format `<namespace>.<option>`. The namespace is set to
+ * the root project name by default, but can be set using the `buildkit.namespace` property.
  */
-public abstract class OptionsExtension internal constructor(
-  private val namespace: String,
-  private val source: OptionsSource
-) {
-  /** Resolve the value of an option with the given [name] from the [source]. */
-  protected fun resolve(name: String): String? {
-    return source.resolve(Option.of("$namespace.$name"))?.trim()
+public abstract class OptionsExtension(private val project: Project) {
+  /** The namespace used for resolving options in this project */
+  private val namespace: String by lazy {
+    project.findProperty(NAMESPACE_PROPERTY) as? String ?: project.rootProject.name
+  }
+
+  /** Resolve the value of an option with the given [name] from the [project]. */
+  private fun resolve(name: String): String? {
+    val value = project.findProperty("$namespace.$name") as? String
+    return value?.trim()
   }
 
   /**
@@ -53,5 +50,10 @@ public abstract class OptionsExtension internal constructor(
    */
   public fun enabled(name: String, default: Boolean = false): Boolean {
     return orNull(name)?.toBooleanStrictOrNull() ?: default
+  }
+
+  private companion object {
+    /** Name of the Gradle property used to override the options namespace. */
+    private const val NAMESPACE_PROPERTY = "buildkit.namespace"
   }
 }
