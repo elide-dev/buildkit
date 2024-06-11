@@ -4,6 +4,21 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 plugins {
   alias(libs.plugins.kotlin.jvm) apply false
   alias(libs.plugins.buildTimeTracker)
+  alias(libs.plugins.nexus)
+}
+
+// Sonatype OSSRH publication setup
+if(findProperty("buildkit.release") == "true") nexusPublishing {
+  repositories {
+    sonatype {
+      stagingProfileId = property("buildkit.sonatypeStagingProfileId").toString()
+      username = property("buildkit.ossrhUsername").toString()
+      password = property("buildkit.ossrhPassword").toString()
+
+      nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
+      snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
+    }
+  }
 }
 
 subprojects {
@@ -11,7 +26,7 @@ subprojects {
   // like Java and Kotlin to be present at the time when our custom logic runs
   afterEvaluate {
     // publish everything by default, but allow projects to opt out
-    if (findProperty("buildkit.release") == "true" && findProperty("buildkit.publish") == "true") {
+    if (findProperty("buildkit.release") == "true" && findProperty("buildkit.publishable") == "true") {
       configurePublishing(this)
     }
 
@@ -38,18 +53,18 @@ fun configurePublishing(project: Project): Unit = with(project) {
   // skip empty projects; only those with the Java extension are eligible for publishing
   val javaExtension = extensions.findByType<JavaPluginExtension>() ?: return@with
 
-  // if (property("buildkit.sign") == "true") apply(plugin = "signing")
+  if (findProperty("buildkit.sign") == "true") apply(plugin = "signing")
   apply(plugin = "maven-publish")
 
   val publishing = extensions.getByType<PublishingExtension>()
-  //  val signing = extensions.findByType<SigningExtension>()
+  val signing = extensions.findByType<SigningExtension>()
 
   // signing configuration (newlines in the key must be un-escaped)
-  //  signing?.useInMemoryPgpKeys(
-  //    /* defaultKeyId = */ option("signing.key-id"),
-  //    /* defaultSecretKey = */ option("signing.key").trim('"').replace("\\n", "\n"),
-  //    /* defaultPassword = */ option("signing.password")
-  //  )
+  signing?.useInMemoryPgpKeys(
+    /* defaultKeyId = */ property("buildkit.signing.key-id").toString(),
+    /* defaultSecretKey = */ property("buildkit.signing.key").toString().trim('"').replace("\\n", "\n"),
+    /* defaultPassword = */ property("buildkit.signing.password").toString()
+  )
 
   // package sources and javadocs into publishable artifacts
   javaExtension.apply {
@@ -60,7 +75,7 @@ fun configurePublishing(project: Project): Unit = with(project) {
   // create a publication for the project, allow opt-out (e.g. Gradle plugins create their own)
   if (findProperty("buildkit.publishing.implicit") != "false") {
     val artifact = findProperty("artifact")?.toString() ?: project.name
-    
+
     // convert snake case to lowerCamelCase
     val publicationName = artifact.lowercase().replace(Regex("-(.)")) {
       it.groupValues[1].uppercase()
@@ -78,12 +93,13 @@ fun configurePublishing(project: Project): Unit = with(project) {
   // configure all publications
   publishing.publications.withType<MavenPublication>().configureEach {
     // sign all artifacts in this publication
-    //    signing?.sign(this)
+    signing?.sign(this)
 
     // add metadata
     pom {
       name = project.name
       description = project.description
+      version = project.version as String
       url = "https://github.com/darvld/buildkit"
 
       licenses {

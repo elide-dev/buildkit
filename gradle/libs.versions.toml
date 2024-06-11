@@ -6,6 +6,7 @@ junit = "5.10.2"
 plugins-buildTimeTracker = "4.3.0"
 plugins-kotlinx-abiValidator = "0.13.2"
 plugins-buildconfig = "3.1.0"
+plugins-nexus="2.0.0"
 
 [libraries]
 junit-params = { module = "org.junit.jupiter:junit-jupiter-params", version.ref = "junit" }
@@ -16,3 +17,4 @@ kotlinx-abiValidator = { id = "org.jetbrains.kotlinx.binary-compatibility-valida
 
 buildTimeTracker = { id = "com.asarkar.gradle.build-time-tracker", version.ref = "plugins-buildTimeTracker" }
 buildconfig = { id = "com.github.gmazzo.buildconfig", version.ref = "plugins-buildconfig" }
+nexus = { id = "io.github.gradle-nexus.publish-plugin", version.ref = "plugins-nexus" }

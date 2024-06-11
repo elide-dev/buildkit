@@ -11,6 +11,7 @@ plugins {
 // in CI for example, the "SNAPSHOT" variant may be added to the version
 group = property("buildkit.group").toString()
 version = property("buildkit.version").toString()
+description = "Buildkit plugin for Gradle projects"
 
 // resolve the name and full ID for the project plugin
 val projectPluginId = "$group.${property("buildkit.project-plugin-id")}"
@@ -20,6 +21,9 @@ gradlePlugin {
   plugins.create(projectPluginName) {
     id = projectPluginId
     implementationClass = "io.github.darvld.buildkit.BuildkitPlugin"
+
+    displayName = "BuildKit"
+    description = "A collection of utilities for authoring Gradle builds"
   }
 }
 
