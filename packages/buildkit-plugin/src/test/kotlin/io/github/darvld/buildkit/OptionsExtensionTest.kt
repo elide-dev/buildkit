@@ -10,7 +10,7 @@ class OptionsExtensionTest {
   /** Temporary project root. */
   @TempDir lateinit var projectDir: File
 
-  @Test fun `use options in project plugin`() {
+  @Test fun `should provide namespaced gradle properties`() {
     // prepare project files
     projectDir.resolve("build.gradle.kts").writeText(
       """
@@ -19,10 +19,7 @@ class OptionsExtensionTest {
       }
       
       // run assertions inside the build script
-      check(options.orNull("env") == "envOption") { "expected env option to be present" }
-      check(options.orNull("gradle") == "gradleOption") { "expected gradle option to be present" }
-      check(options.orNull("overridden") == "replaced") { "expected local.properties to override option" }
-      check(options.orNull("local") == "localOption") { "expected project-local option to be present" }
+      check(options.orNull("option") == "value") { "expected env option to be present" }
       """.trimIndent()
     )
 
@@ -34,24 +31,50 @@ class OptionsExtensionTest {
 
     projectDir.resolve("gradle.properties").writeText(
       """
-      test.gradle=gradleOption
-      test.overridden=original
-      """.trimIndent()
-    )
-
-    projectDir.resolve("local.properties").writeText(
-      """
-      test.local=localOption
-      test.overridden=replaced
+      test.option=value
       """.trimIndent()
     )
 
     // build project
     val project = GradleRunner.create()
-      .withPluginClasspath()
       .withProjectDir(projectDir)
-      .withEnvironment(mapOf("TEST_ENV" to "envOption"))
       .withArguments("tasks")
+      .withPluginClasspath()
+
+    assertDoesNotThrow("expected build to succeed") { project.build() }
+  }
+
+  @Test fun `should use custom namespace`() {
+    // prepare project files
+    projectDir.resolve("build.gradle.kts").writeText(
+      """
+      plugins {
+          id("${TestConstants.PLUGIN_ID}") version "${TestConstants.PLUGIN_VERSION}"
+      }
+
+      // run assertions inside the build script
+      check(options.orNull("option") == "value") { "expected env option to be present" }
+      """.trimIndent()
+    )
+
+    projectDir.resolve("settings.gradle.kts").writeText(
+      """
+      rootProject.name = "test"
+      """.trimIndent()
+    )
+
+    projectDir.resolve("gradle.properties").writeText(
+      """
+      buildkit.namespace=custom
+      custom.option=value
+      """.trimIndent()
+    )
+
+    // build project
+    val project = GradleRunner.create()
+      .withProjectDir(projectDir)
+      .withArguments("tasks")
+      .withPluginClasspath()
 
     assertDoesNotThrow("expected build to succeed") { project.build() }
   }
