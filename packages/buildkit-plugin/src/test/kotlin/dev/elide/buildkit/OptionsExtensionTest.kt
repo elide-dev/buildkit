@@ -1,4 +1,4 @@
-package io.github.darvld.buildkit
+package dev.elide.buildkit
 
 import org.gradle.testkit.runner.GradleRunner
 import org.junit.jupiter.api.Test

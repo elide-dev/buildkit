@@ -1,4 +1,4 @@
-package io.github.darvld.buildkit
+package dev.elide.buildkit
 
 import org.gradle.api.Project
 

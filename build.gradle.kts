@@ -100,7 +100,7 @@ fun configurePublishing(project: Project): Unit = with(project) {
       name = project.name
       description = project.description
       version = project.version as String
-      url = "https://github.com/darvld/buildkit"
+      url = "https://github.com/elide/buildkit"
 
       licenses {
         license {
@@ -118,8 +118,8 @@ fun configurePublishing(project: Project): Unit = with(project) {
       }
 
       scm {
-        connection = "scm:git:ssh://github.com/darvld/buildkit.git"
-        url = "https://github.com/darvld/buildkit/tree/main"
+        connection = "scm:git:ssh://github.com/elide/buildkit.git"
+        url = "https://github.com/elide/tree/main"
       }
     }
   }

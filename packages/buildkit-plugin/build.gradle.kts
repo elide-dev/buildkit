@@ -20,7 +20,7 @@ val projectPluginName = property("buildkit.project-plugin-name").toString()
 gradlePlugin {
   plugins.create(projectPluginName) {
     id = projectPluginId
-    implementationClass = "io.github.darvld.buildkit.BuildkitPlugin"
+    implementationClass = "dev.elide.buildkit.BuildkitPlugin"
 
     displayName = "BuildKit"
     description = "A collection of utilities for authoring Gradle builds"
@@ -42,7 +42,7 @@ val testEnvKey = "TEST_ENV"
 val testEnvValue = "TEST_ENV_VALUE"
 
 buildConfig {
-  packageName = "io.github.darvld.buildkit"
+  packageName = "dev.elide.buildkit"
 
   sourceSets.named("test") {
     className = "TestConstants"
