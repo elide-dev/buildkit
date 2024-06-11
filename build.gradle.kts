@@ -11,9 +11,10 @@ plugins {
 if(findProperty("buildkit.release") == "true") nexusPublishing {
   repositories {
     sonatype {
-      stagingProfileId = property("buildkit.sonatypeStagingProfileId").toString()
-      username = property("buildkit.ossrhUsername").toString()
-      password = property("buildkit.ossrhPassword").toString()
+      stagingProfileId = property("buildkit.publishing.staging-profile").toString()
+      
+      username = property("buildkit.publishing.token-user").toString()
+      password = property("buildkit.publishing.token-secret").toString()
 
       nexusUrl.set(uri("https://s01.oss.sonatype.org/service/local/"))
       snapshotRepositoryUrl.set(uri("https://s01.oss.sonatype.org/content/repositories/snapshots/"))
